@@ -44,6 +44,7 @@ class Dev(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'debug_toolbar',
+        'blango_auth',
         'blog',
     ]
 
@@ -93,6 +94,8 @@ class Dev(Configuration):
 
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+
+    AUTH_USER_MODEL = "blango_auth.User"
 
     AUTH_PASSWORD_VALIDATORS = [
         {
