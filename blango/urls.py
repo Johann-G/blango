@@ -24,7 +24,7 @@ urlpatterns = [
     path("posts/", views.post_list, name="post_list"),
     path("posts/<int:id>/", views.post_detail, name="post_detail"),
 
-    path("api/v1/", include("blog.api_urls")),
+    path("api/v1/", include("blog.api.urls")),
 ]
 
 if settings.DEBUG:
