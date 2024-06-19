@@ -1,8 +1,13 @@
 from rest_framework import serializers
-from blog.models import Post
+from blog.models import Post, Tag
+from blango_auth.models import User
 
 
 class PostSerializer(serializers.ModelSerializer):
+
+    tags = serializers.SlugRelatedField(slug_field="value", many=True, queryset=Tag.objects.all())
+    author = serializers.HyperlinkedRelatedField(queryset=User.objects.all(), view_name="api_user_detail", lookup_field="email")
+
     class Meta:
         model = Post
         fields = "__all__"
@@ -17,3 +22,10 @@ class PostSerializer(serializers.ModelSerializer):
         if data["title"] not in data["summary"]:
             raise serializers.ValidationError("Title must be in the summary")
         return data
+    
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["username", "email"]
