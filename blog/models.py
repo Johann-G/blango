@@ -14,7 +14,6 @@ class AuthorProfile(models.Model):
 
 
 class Tag(models.Model):
-
     value = models.TextField(max_length=100, unique=True)
 
     def __str__(self):
@@ -22,7 +21,6 @@ class Tag(models.Model):
 
 
 class Comment(models.Model):
-
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -33,7 +31,6 @@ class Comment(models.Model):
 
 
 class Post(models.Model):
-
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
