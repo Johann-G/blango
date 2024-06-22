@@ -61,6 +61,10 @@ class Dev(Configuration):
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
 
+    DEBUG_TOOLBAR_CONFIG = {
+        "IS_RUNNING_TESTS": False,
+    }
+
     ROOT_URLCONF = 'blango.urls'
 
     TEMPLATES = [
@@ -183,6 +187,5 @@ class Dev(Configuration):
 
 
 class Prod(Dev):
-
     DEBUG = False
     SECRET_KEY = values.SecretValue()
