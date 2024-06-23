@@ -49,6 +49,7 @@ class PostApiTestCase(TestCase):
         response = self.client.get("/api/v1/posts/")
         data = response.json()
 
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data), 2)
         for post_dict in data:
             post = self.post_by_id[post_dict["id"]]
