@@ -5,7 +5,11 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from datetime import timedelta
+from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.http import Http404
+from django.db.models import Q
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 
@@ -32,8 +36,36 @@ class PostViewSet(viewsets.ModelViewSet):
         if self.action in ("list", "create"):
             return PostSerializer
         return PostDetailSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            queryset = self.queryset.filter(published_at__lte=timezone.now())
+        
+        if self.request.user.is_staff:
+            queryset = self.queryset
+        
+        queryset = self.queryset.filter(
+            Q(published_at__lte=timezone.now()) | Q(author=self.request.user)
+        )
+
+        period_name = self.kwargs.get("period_name")
+
+        if not period_name:
+            return queryset
+    
+        if period_name == "new":
+            return queryset.filter(published_at__gte=timezone.now() - timedelta(hours=1))
+        elif period_name == "today":
+            return queryset.filter(published_at__gte=timezone.now() - timedelta(days=1))
+        elif period_name == "week":
+            return queryset.filter(published_at__gte=timezone.now() - timedelta(days=7))
+        else:
+            raise Http404(
+                f"Time period {period_name} should be 'new', 'today', 'week'"
+            )
     
     @method_decorator(cache_page(60))
+    @method_decorator(vary_on_headers("Authorization", "Cookie"))
     def list(self, *args, **kwargs):
         return super().list(*args, **kwargs)
     
