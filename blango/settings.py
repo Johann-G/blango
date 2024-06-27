@@ -45,6 +45,7 @@ class Dev(Configuration):
         'django.contrib.staticfiles',
         'rest_framework',
         'rest_framework.authtoken',
+        'django_filters',
         'debug_toolbar',
         'blango_auth',
         'blog',
@@ -194,7 +195,13 @@ class Dev(Configuration):
             "anon_burst": "10/minute",
             "user_sustained": "5000/day",
             "user_burst": "100/minute",
-        }
+        },
+        "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+        "PAGE_SIZE": 5,
+        "DEFAULT_FILTER_BACKENDS": [
+            "django_filters.rest_framework.DjangoFilterBackend",
+            "rest_framework.filters.OrderingFilter",
+        ],
     }
 
 
