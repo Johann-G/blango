@@ -1,6 +1,6 @@
 import requests
 
-EMAIL_ADDRESS = "groll.johann@gmail.com"
+EMAIL_ADDRESS = "nicolas@gmail.com"
 PASSWORD = "admin-oc"
 BASE_URL = "http://127.0.0.1:8000/"
 
