@@ -43,16 +43,14 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_anonymous:
             queryset = self.queryset.filter(published_at__lte=timezone.now())
-        
-        if self.request.user.is_staff:
+        elif self.request.user.is_staff:
             queryset = self.queryset
-        
-        queryset = self.queryset.filter(
-            Q(published_at__lte=timezone.now()) | Q(author=self.request.user)
-        )
+        else:
+            queryset = self.queryset.filter(
+                Q(published_at__lte=timezone.now()) | Q(author=self.request.user)
+            )
 
         period_name = self.kwargs.get("period_name")
-
         if not period_name:
             return queryset
     
@@ -61,7 +59,7 @@ class PostViewSet(viewsets.ModelViewSet):
         elif period_name == "today":
             return queryset.filter(published_at__gte=timezone.now() - timedelta(days=1))
         elif period_name == "week":
-            return queryset.filter(published_at__gte=timezone.now() - timedelta(days    =7))
+            return queryset.filter(published_at__gte=timezone.now() - timedelta(days=7))
         else:
             raise Http404(
                 f"Time period {period_name} should be 'new', 'today', 'week'"
